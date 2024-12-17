@@ -6,9 +6,9 @@ Endpoint: POST /api/register
 curl --location 'http://localhost:8080/api/register' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "username": "Abhinav",
+    "username": "mahesh",
     "password": "password123",
-    "email": "abhinav@gmail.com"
+    "email": "mahesh@gmail.com"
 }'
 ```
 2. User Login (Generate API Key)
@@ -17,7 +17,7 @@ Endpoint: POST /api/login
 ```
 curl --location 'http://localhost:8080/api/login' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'username=Abhinav' \
+--data-urlencode 'username=mahesh' \
 --data-urlencode 'password=password123'
 ```
 
