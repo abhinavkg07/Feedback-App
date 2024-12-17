@@ -1,0 +1,7 @@
+com/myApp/feedbackapp/util/SessionManager.class
+com/myApp/feedbackapp/model/User.class
+com/myApp/feedbackapp/model/Feedback.class
+com/myApp/feedbackapp/service/UserService.class
+com/myApp/feedbackapp/FeedbackApplication.class
+com/myApp/feedbackapp/controller/UserController.class
+com/myApp/feedbackapp/util/ApiKeyManager.class
