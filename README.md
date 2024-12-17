@@ -1,3 +1,8 @@
+**RUN AND BUILD**
+1. Install maven and JAVA 17
+2. Run command ```mvn clean install```
+3. Now, Run the application!!
+
 **API Endpoints**
 1. User Registration
 Endpoint: POST /api/register
