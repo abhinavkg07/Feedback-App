@@ -14,7 +14,28 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.6.6</version> <!-- Compatible with Java 17 -->
+		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
+	<properties>
+		<java.version>11</java.version>
+		<jdk.version>11</jdk.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
+		<lombok.version>1.18.12</lombok.version>
+		<spring.version>2.6.6</spring.version>
+		<org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
+		<error_prone_core.version>2.4.0</error_prone_core.version>
+		<spring.boot.starter.webflux>2.5.5</spring.boot.starter.webflux>
+		<!--pmd-->
+		<maven-pmd-plugin.version>3.13.0</maven-pmd-plugin.version>
+		<!--auto format-->
+		<fmt-maven-plugin.version>2.9</fmt-maven-plugin.version>
+		<!--checkstyle-->
+		<maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
+		<puppycrawl.checkstyle.version>8.34</puppycrawl.checkstyle.version>
+		<sevntu-checks.checkstyle.version>1.37.1</sevntu-checks.checkstyle.version>
+	</properties>
 
 	<!-- Dependencies -->
 	<dependencies>
@@ -46,6 +67,124 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<!-- Auto format code during compilation -->
+			<plugin>
+				<groupId>com.coveo</groupId>
+				<artifactId>fmt-maven-plugin</artifactId>
+				<version>${fmt-maven-plugin.version}</version>
+				<configuration>
+					<verbose>true</verbose>
+					<skipSortingImports>false</skipSortingImports>
+					<style>google</style>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>format</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Check Style with modified google coding style -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven-checkstyle-plugin.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>${puppycrawl.checkstyle.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>com.github.sevntu-checkstyle</groupId>
+						<artifactId>sevntu-checks</artifactId>
+						<version>${sevntu-checks.checkstyle.version}</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<sourceDirectories>
+						<sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+						<sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
+					</sourceDirectories>
+					<failOnViolation>true</failOnViolation>
+					<configLocation>tools/checkstyle/modified_google_sevntu_checks.xml</configLocation>
+					<enableRSS>false</enableRSS>
+				</configuration>
+				<executions>
+					<execution>
+						<id>checkstyle-fail-build</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Static analysis using PMD -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>${maven-pmd-plugin.version}</version>
+				<configuration>
+					<sourceEncoding>utf-8</sourceEncoding>
+					<minimumTokens>100</minimumTokens>
+					<targetJdk>${jdk.version}</targetJdk>
+					<linkXRef>false</linkXRef>
+					<excludes>
+						<exclude>**/*Test.java</exclude>
+						<exclude>**/generated/*.java</exclude>
+					</excludes>
+					<excludeRoots>
+						<excludeRoot>${project.basedir}/target/generated-sources</excludeRoot>
+					</excludeRoots>
+					<skipEmptyReport>false</skipEmptyReport>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Generate mappers between DTOs and Entities -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<compilerArgs>
+						<arg>-XDcompilePolicy=simple</arg>
+					</compilerArgs>
+					<!-- Both lombok and mapstruct are required to work with each other -->
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${org.mapstruct.version}</version>
+						</path>
+						<path>
+							<groupId>com.google.errorprone</groupId>
+							<artifactId>error_prone_core</artifactId>
+							<version>${error_prone_core.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
