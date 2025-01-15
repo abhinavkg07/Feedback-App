@@ -1,8 +1,15 @@
 HELP.md
+
+# Ignore all compiled class files
+*.class
+
+# Ignore the entire target/ directory
 target/
+build/
+
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+#!**/src/main/**/target/
+#!**/src/test/**/target/
 
 ### STS ###
 .apt_generated
